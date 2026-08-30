@@ -2,8 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->group(function () {
+Route::prefix("v1")->group(function () {
     Route::get("/", function () {
         return response()->json(["status" => "ok"]);
+    });
+
+    Route::get("/health", function () {
+        return response()->json(
+            [
+                "message" => "Application is running ok.",
+                "data" => null,
+            ],
+            200,
+        );
     });
 });
