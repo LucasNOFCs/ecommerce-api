@@ -16,4 +16,16 @@ Route::prefix('v1')->group(function () {
             200,
         );
     });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/protected', function () {
+            return response()->json(
+                [
+                    'message' => 'OK',
+                    'data' => null,
+                ],
+                200,
+            );
+        });
+    });
 });
