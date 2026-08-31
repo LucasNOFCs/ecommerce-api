@@ -37,4 +37,14 @@ Route::prefix('v1')->group(function () {
             );
         });
     });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::prefix('users')->group(function () {
+            Route::get('/me', [AuthController::class, 'me']);
+
+            Route::put('/me', [AuthController::class, 'updateMe']);
+
+            Route::delete('/me', [AuthController::class, 'deleteMe']);
+        });
+    });
 });

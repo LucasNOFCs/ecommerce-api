@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,5 +42,44 @@ class AuthController extends Controller
             'message' => 'Logout successful',
             'data' => null,
         ], 200);
+    }
+
+    public function me(Request $request): JsonResponse
+    {
+        $me = $this->authService->me($request);
+
+        return response()->json([
+            'message' => 'Returned authenticated user.',
+            'data' => [
+                'id' => $me->id,
+                'name' => $me->name,
+                'email' => $me->email,
+                'created_at' => $me->created_at,
+            ],
+        ]);
+    }
+
+    public function updateMe(UpdateUserRequest $request): JsonResponse
+    {
+        $me = $this->authService->updateMe($request);
+
+        return response()->json([
+            'message' => 'User has been updated.',
+            'data' => [
+                'id' => $me->id,
+                'name' => $me->name,
+                'email' => $me->email,
+            ],
+        ]);
+    }
+
+    public function deleteMe()
+    {
+        $status = $this->authService->deleteMe();
+
+        return response()->json([
+            'message' => 'User has been deleted.',
+            'data' => null,
+        ]);
     }
 }
