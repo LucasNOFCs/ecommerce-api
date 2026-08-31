@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Generate application key
+        run: php artisan key:generate
+
       - name: Check code style
         run: ./vendor/bin/pint --test
 
