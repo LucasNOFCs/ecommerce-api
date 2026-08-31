@@ -13,6 +13,6 @@ class ApiVersioningTest extends TestCase
     {
         $response = $this->get('/api/v1/');
 
-        $response->assertStatus(200)->assertJson(["status" => "ok"]);
+        $response->assertStatus(200)->assertJson(['status' => 'ok']);
     }
 }
