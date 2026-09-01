@@ -39,6 +39,30 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/test/admin', function () {
+            return response()->json(
+                [
+                    'message' => 'OK',
+                    'data' => null,
+                ],
+                200,
+            );
+        })->middleware('role:admin');
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/test/anyrole', function () {
+            return response()->json(
+                [
+                    'message' => 'OK',
+                    'data' => null,
+                ],
+                200,
+            );
+        })->middleware('role:user,role:admin');
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
 

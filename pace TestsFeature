@@ -1,0 +1,92 @@
+[1mdiff --git a/app/Http/Controllers/AuthController.php b/app/Http/Controllers/AuthController.php[m
+[1mindex 30cf55f..a1a0c84 100644[m
+[1m--- a/app/Http/Controllers/AuthController.php[m
+[1m+++ b/app/Http/Controllers/AuthController.php[m
+[36m@@ -54,6 +54,7 @@[m [mpublic function me(Request $request): JsonResponse[m
+                 'id' => $me->id,[m
+                 'name' => $me->name,[m
+                 'email' => $me->email,[m
+[32m+[m[32m                'role' => $me->role,[m
+                 'created_at' => $me->created_at,[m
+             ],[m
+         ]);[m
+[1mdiff --git a/app/Models/User.php b/app/Models/User.php[m
+[1mindex 4e71ebe..e021d3f 100644[m
+[1m--- a/app/Models/User.php[m
+[1m+++ b/app/Models/User.php[m
+[36m@@ -11,7 +11,7 @@[m
+ use Illuminate\Notifications\Notifiable;[m
+ use Laravel\Sanctum\HasApiTokens;[m
+ [m
+[31m-#[Fillable(['name', 'email', 'password'])][m
+[32m+[m[32m#[Fillable(['name', 'email', 'password', 'role'])][m
+ #[Hidden(['password', 'remember_token'])][m
+ class User extends Authenticatable[m
+ {[m
+[36m@@ -30,4 +30,9 @@[m [mprotected function casts(): array[m
+             'password' => 'hashed',[m
+         ];[m
+     }[m
+[32m+[m
+[32m+[m[32m    public function isAdmin(): bool[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return $this->role === 'admin';[m
+[32m+[m[32m    }[m
+ }[m
+[1mdiff --git a/bootstrap/app.php b/bootstrap/app.php[m
+[1mindex ed13cfd..f3afc05 100644[m
+[1m--- a/bootstrap/app.php[m
+[1m+++ b/bootstrap/app.php[m
+[36m@@ -1,5 +1,6 @@[m
+ <?php[m
+ [m
+[32m+[m[32muse App\Http\Middleware\RoleMiddleware;[m
+ use Illuminate\Foundation\Application;[m
+ use Illuminate\Foundation\Configuration\Exceptions;[m
+ use Illuminate\Foundation\Configuration\Middleware;[m
+[36m@@ -20,6 +21,10 @@[m
+ [m
+             return '/login';[m
+         });[m
+[32m+[m
+[32m+[m[32m        $middleware->alias([[m
+[32m+[m[32m            'role' => RoleMiddleware::class,[m
+[32m+[m[32m        ]);[m
+     })[m
+     ->withExceptions(function (Exceptions $exceptions): void {[m
+         $exceptions->shouldRenderJsonWhen([m
+[1mdiff --git a/routes/v1/v1_api.php b/routes/v1/v1_api.php[m
+[1mindex 8e2f02f..d48951d 100644[m
+[1m--- a/routes/v1/v1_api.php[m
+[1m+++ b/routes/v1/v1_api.php[m
+[36m@@ -38,6 +38,30 @@[m
+         });[m
+     });[m
+ [m
+[32m+[m[32m    Route::middleware('auth:sanctum')->group(function () {[m
+[32m+[m[32m        Route::get('/test/admin', function () {[m
+[32m+[m[32m            return response()->json([m
+[32m+[m[32m                [[m
+[32m+[m[32m                    'message' => 'OK',[m
+[32m+[m[32m                    'data' => null,[m
+[32m+[m[32m                ],[m
+[32m+[m[32m                200,[m
+[32m+[m[32m            );[m
+[32m+[m[32m        })->middleware('role:admin');[m
+[32m+[m[32m    });[m
+[32m+[m
+[32m+[m[32m    Route::middleware('auth:sanctum')->group(function () {[m
+[32m+[m[32m        Route::get('/test/anyrole', function () {[m
+[32m+[m[32m            return response()->json([m
+[32m+[m[32m                [[m
+[32m+[m[32m                    'message' => 'OK',[m
+[32m+[m[32m                    'data' => null,[m
+[32m+[m[32m                ],[m
+[32m+[m[32m                200,[m
+[32m+[m[32m            );[m
+[32m+[m[32m        })->middleware('role:user,role:admin');[m
+[32m+[m[32m    });[m
+[32m+[m
+     Route::middleware('auth:sanctum')->group(function () {[m
+         Route::prefix('users')->group(function () {[m
+             Route::get('/me', [AuthController::class, 'me']);[m
