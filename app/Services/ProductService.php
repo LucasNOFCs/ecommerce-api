@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\Product;
 
 class ProductService
@@ -39,5 +40,25 @@ class ProductService
         }
 
         return false;
+    }
+
+    public function vinculateProductToCategory(int $productId, int $categoryId): ?Product
+    {
+        $product = Product::find($productId);
+
+        if (! $product) {
+            return null;
+        }
+
+        $category = Category::find($categoryId);
+
+        if (! $category) {
+            return null;
+        }
+
+        $product->category_id = $category->id;
+        $product->save();
+
+        return $product;
     }
 }

@@ -19,5 +19,6 @@ Route::prefix('v1')->group(function () {
 
     require __DIR__.'/products.php';
     require __DIR__.'/users.php';
+    require __DIR__.'/categories.php';
     require __DIR__.'/tests.php';
 });
