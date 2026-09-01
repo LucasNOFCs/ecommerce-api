@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductFilterRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Request $request, ProductService $productService)
-    {
-        $perPage = $request->input('per_page', 10);
+    public function index(
+        ProductFilterRequest $request,
+        ProductService $productService
+    ) {
+        $filters = $request->validated();
 
-        $products = $productService->getProducts((int) $perPage);
+        $perPage = $filters['per_page'] ?? 10;
+
+        $products = $productService->getProducts(
+            $filters,
+            (int) $perPage
+        );
 
         return response()->json([
             'message' => 'Products retrieved successfully.',
