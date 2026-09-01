@@ -12,9 +12,11 @@ class ProductService
         return Product::create($data);
     }
 
-    public function getAllProducts()
+    public function getProducts(int $perPage = 10)
     {
-        return Product::all();
+        return Product::query()
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
     }
 
     public function getProductById(int $id): ?Product
