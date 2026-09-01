@@ -96,4 +96,22 @@ class ProductController extends Controller
             'data' => null,
         ]);
     }
+
+    public function vinculateProductToCategory(int $productId, int $categoryId)
+    {
+        $productService = new ProductService;
+        $product = $productService->vinculateProductToCategory((int) $productId, (int) $categoryId);
+
+        if (! $product) {
+            return response()->json([
+                'message' => 'Product not found.',
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Product vinculated to category successfully.',
+            'data' => $product,
+        ]);
+    }
 }
