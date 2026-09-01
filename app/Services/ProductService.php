@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductService
 {
@@ -12,11 +13,45 @@ class ProductService
         return Product::create($data);
     }
 
-    public function getProducts(int $perPage = 10)
+    public function getProducts(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        return Product::query()
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+        $query = Product::query();
+
+        if (! empty($filters['search'])) {
+            $search = $filters['search'];
+
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if (! empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        if (isset($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        }
+
+        if (isset($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
+        }
+
+        if (isset($filters['in_stock'])) {
+            if ($filters['in_stock']) {
+                $query->where('stock', '>', 0);
+            } else {
+                $query->where('stock', '=', 0);
+            }
+        }
+
+        $sort = $filters['sort'] ?? 'created_at';
+        $direction = $filters['direction'] ?? 'desc';
+
+        $query->orderBy($sort, $direction);
+
+        return $query->paginate($perPage);
     }
 
     public function getProductById(int $id): ?Product
