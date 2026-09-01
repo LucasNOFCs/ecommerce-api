@@ -5,17 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Services\ProductService;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request, ProductService $productService)
     {
-        $productService = new ProductService;
-        $products = $productService->getAllProducts();
+        $perPage = $request->input('per_page', 10);
+
+        $products = $productService->getProducts((int) $perPage);
 
         return response()->json([
             'message' => 'Products retrieved successfully.',
-            'data' => $products,
+            'data' => $products->items(),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ],
         ]);
     }
 
