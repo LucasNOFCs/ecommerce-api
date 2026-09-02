@@ -18,4 +18,9 @@ class Product extends Model
             'stock' => 'integer',
         ];
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }
