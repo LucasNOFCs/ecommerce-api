@@ -16,7 +16,7 @@ class OrderItem extends Model
         'product_name',
         'unit_price',
         'quantity',
-        'subtotal'
+        'subtotal',
     ];
 
     protected function casts(): array
@@ -24,7 +24,7 @@ class OrderItem extends Model
         return [
             'unit_price' => 'decimal:2',
             'quantity' => 'integer',
-            'subtotal' => 'decimal:2'
+            'subtotal' => 'decimal:2',
         ];
     }
 

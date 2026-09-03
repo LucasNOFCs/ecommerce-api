@@ -22,7 +22,7 @@ class OrderItemFactory extends Factory
 
         $unitPrice = fake()->randomFloat(2, 10, 500);
         $quantity = fake()->numberBetween(1, 5);
-        
+
         return [
             'order_id' => Order::factory(),
             'product_id' => Product::factory(),

@@ -21,7 +21,7 @@ class OrderService
 
         if ($cart->items->isEmpty()) {
             throw ValidationException::withMessages([
-                'cart' => 'Cart is empty.'
+                'cart' => 'Cart is empty.',
             ]);
         }
 
@@ -31,21 +31,21 @@ class OrderService
             $order = Order::create([
                 'user_id' => $cart->user_id,
                 'status' => 'pending',
-                'total' => 0
+                'total' => 0,
             ]);
 
-            foreach($cart->items as $item) {
+            foreach ($cart->items as $item) {
                 $product = $item->product;
 
-                if (!$product) {
+                if (! $product) {
                     throw ValidationException::withMessages([
-                        'cart' => 'One of the products is no longer available.'
+                        'cart' => 'One of the products is no longer available.',
                     ]);
                 }
-                
+
                 if ($item->quantity > $product->stock) {
                     throw ValidationException::withMessages([
-                        'cart' => "Insufficient stock for product {$product->name}."
+                        'cart' => "Insufficient stock for product {$product->name}.",
                     ]);
                 }
 
@@ -56,23 +56,22 @@ class OrderService
                     'product_name' => $product->name,
                     'unit_price' => $product->price,
                     'quantity' => $item->quantity,
-                    'subtotal' => $subtotal
+                    'subtotal' => $subtotal,
                 ]);
 
                 $total += $subtotal;
             }
 
             $order->update([
-                'total' => $total
+                'total' => $total,
             ]);
 
             $cart->update([
-                'status' => 'completed'
+                'status' => 'completed',
             ]);
 
             return $order->load('items');
         });
 
-        
     }
 }

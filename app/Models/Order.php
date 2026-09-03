@@ -14,13 +14,13 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'status',
-        'total'
+        'total',
     ];
 
     protected function casts(): array
     {
         return [
-            'total' => 'decimal:2'
+            'total' => 'decimal:2',
         ];
     }
 
