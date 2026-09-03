@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     require __DIR__.'/categories.php';
     require __DIR__.'/tests.php';
     require __DIR__.'/carts.php';
+    require __DIR__.'/payments.php';
     require __DIR__.'/checkout.php';
     require __DIR__.'/orders.php';
 });
