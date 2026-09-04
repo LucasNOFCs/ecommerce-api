@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Override;
 
@@ -26,7 +27,8 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'email'],
+            'email' => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($this->user()->id),
+            ],
         ];
     }
 

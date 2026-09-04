@@ -62,7 +62,7 @@ class AuthController extends Controller
 
     public function updateMe(UpdateUserRequest $request): JsonResponse
     {
-        $me = $this->authService->updateMe($request);
+        $me = $this->authService->updateMe($request->user(), $request->validated());
 
         return response()->json([
             'message' => 'User has been updated.',

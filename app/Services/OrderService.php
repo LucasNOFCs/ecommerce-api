@@ -74,4 +74,28 @@ class OrderService
         });
 
     }
+
+    public function getOrderHistory(
+        User $user,
+        ?string $status = null
+    ) {
+        $query = $user->orders()
+            ->with('items')
+            ->latest();
+
+        if ($status !== null) {
+            $query->where('status', $status);
+        }
+
+        return $query->paginate(15);
+    }
+
+    public function getOrder(
+        User $user,
+        int $orderId
+    ): Order {
+        return $user->orders()
+            ->with('items')
+            ->findOrFail($orderId);
+    }
 }
