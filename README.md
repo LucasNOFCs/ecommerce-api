@@ -1,58 +1,259 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ecommerce API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+REST API for an e-commerce platform built with Laravel.
 
-## About Laravel
+> **Project status:** Study / Practice / Portfolio
+>
+> This repository is intentionally focused on backend engineering, API architecture, testing, security, observability, and performance. It is not currently intended for production deployment.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:  
+## About
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project was developed as a structured backend exercise, evolving from a basic API foundation into a more complete e-commerce backend.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The project follows a layered approach:
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```text
+Route
+  ↓
+Controller
+  ↓
+Form Request
+  ↓
+Service
+  ↓
+Model
+  ↓
+Database
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+The goal is to keep HTTP concerns in controllers and requests, business rules in services, and persistence in Eloquent models and migrations.
 
-## Contributing
+## Main Features
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### API Foundation
+- API versioning with `/api/v1`
+- Standardized API responses
+- Centralized exception handling
+- API health check
+- Feature and unit testing conventions
+- Database conventions
+- CI validation
 
-## Code of Conduct
+### Authentication & Authorization
+- Registration
+- Login
+- Logout
+- Current authenticated user
+- Email verification
+- Sanctum authentication
+- Role-based access control
+- Policies / authorization rules
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Catalog
+- Categories
+- Products
+- Product/category association
+- Product inventory
+- Product search
+- Category filtering
+- Price filtering
+- Stock filtering
+- Configurable sorting
+- Pagination
 
-## Security Vulnerabilities
+### Shopping
+- Shopping cart
+- Cart items
+- Quantity updates
+- Cart ownership/isolation
+- Checkout
+- Order creation
+- Order items
+- Order status handling
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Payments
+- Payment creation
+- Payment status management
+- Payment gateway abstraction
+- Fake payment gateway for development/testing
+- Payment webhooks
+- Webhook idempotency
+- Order confirmation after successful payment
 
-## License
+### Customer Experience
+- Multiple customer addresses
+- Address ownership/isolation
+- Default address management
+- Order history
+- Order pagination and status filtering
+- Customer profile retrieval/update
+- Wishlist persistence
+- Wishlist item management
+- Wishlist uniqueness and ownership
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Security & Hardening
+- Authentication rate limiting
+- General API rate limiting
+- Payment rate limiting
+- Checkout rate limiting
+- Webhook rate limiting
+- Input validation and sanitization
+- Authorization auditing
+- Mass assignment protection
+- Security headers
+- API security testing
+
+### Observability & Performance
+- Logging
+- API monitoring
+- Caching
+- Query optimization
+- Performance testing
+
+## Current Roadmap
+
+```text
+PHASE 1 — API FOUNDATION
+#1  API Foundation
+#2  API Versioning
+#3  Standardize API Responses
+#4  API Exception Handling                         ✅
+
+PHASE 2 — DEVELOPMENT INFRASTRUCTURE
+#5  API Health Check
+#6  Testing Conventions
+#7  Database & Model Conventions
+#8  CI Pipeline                                    ✅
+
+PHASE 3 — AUTHENTICATION & AUTHORIZATION
+#9  Authentication Foundation — Sanctum           ✅
+#10 User Model & Authentication                    ✅
+#11 Email Verification                             ✅
+#12 Authorization / RBAC                          ✅
+
+PHASE 4 — CATALOG
+#13 Categories                                    ✅
+#14 Products                                      ✅
+#15 Product Categories                             ✅
+#16 Product Inventory                              ✅
+#17 Product Filtering & Sorting                    ✅
+
+PHASE 5 — SHOPPING
+#19 Shopping Cart                                 ✅
+#20 Cart Items                                    ✅
+#21 Checkout                                      ✅
+#22 Order Creation, Items & Status                ✅
+
+PHASE 6 — PAYMENT SYSTEM
+#25 Payment System                                ✅
+
+PHASE 7 — CUSTOMER EXPERIENCE
+#29 Customer Experience                           ✅
+
+PHASE 8 — SECURITY & HARDENING
+#33 Rate Limiting                                 ✅
+#34 Input Validation & Sanitization                ⏳
+#35 Authorization Audit                            ⬜
+#36 Mass Assignment Protection                     ⬜
+#37 Security Headers                               ⬜
+#38 API Security Testing                           ⬜
+
+PHASE 9 — OBSERVABILITY & PERFORMANCE
+#39 Logging                                        ⬜
+#40 API Monitoring                                 ⬜
+#41 Caching                                        ⬜
+#42 Query Optimization                             ⬜
+#43 Performance Testing                            ⬜
+
+PHASE 10 — PRODUCTION
+#44 Docker                                        ⬜
+#45 Production Configuration                       ⬜
+#46 CI/CD                                         ⬜
+#47 Deployment                                    ⬜
+#48 Production Documentation                      ⬜
+```
+
+## Tech Stack
+
+- PHP
+- Laravel
+- Laravel Sanctum
+- Eloquent ORM
+- PHPUnit
+- Laravel Pint
+- SQLite for local/testing workflows
+- Git / GitHub
+- GitHub Actions
+
+## Testing
+
+The project uses automated Feature and Unit tests.
+
+Run the full test suite:
+
+```bash
+php artisan test
+```
+
+Run Pint validation:
+
+```bash
+vendor/bin/pint --test
+```
+
+Focused tests can be executed by file, for example:
+
+```bash
+php artisan test tests/Feature/RateLimitTest.php
+```
+
+## Development Workflow
+
+The project follows a feature-oriented Git workflow:
+
+```text
+Feature branch
+    ↓
+Implementation
+    ↓
+Tests
+    ↓
+Pint / CI
+    ↓
+Pull Request
+    ↓
+Code Review
+    ↓
+Merge
+```
+
+The objective is to keep changes isolated, tested, and reviewable.
+
+## Project Goals
+
+This repository is primarily intended to demonstrate:
+
+- REST API design
+- Laravel architecture
+- Business-rule separation
+- Database modeling
+- Authentication and authorization
+- Automated testing
+- API security
+- Rate limiting
+- Payment workflows
+- Webhooks and idempotency
+- Observability
+- Performance analysis
+
+The project is expected to end at Phase 9 for the current study/portfolio scope. Phase 10 remains in the roadmap as a production-oriented extension and is not currently part of the main delivery goal.
+
+## Status
+
+Current development is in:
+
+**PHASE 8 — SECURITY & HARDENING**
+
+Current issue:
+
+**#34 — Input Validation & Sanitization**
