@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/products', [ProductController::class, 'store'])->middleware('role:admin');
     Route::get('/products/{id}', [ProductController::class, 'show']);

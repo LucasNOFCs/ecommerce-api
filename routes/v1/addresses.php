@@ -3,7 +3,7 @@
 use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/addresses', [AddressController::class, 'index']);
     Route::post('/addresses', [AddressController::class, 'store']);
     Route::get('/addresses/{address}', [AddressController::class, 'show']);
