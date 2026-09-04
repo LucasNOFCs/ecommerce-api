@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,13 +54,11 @@ class AuthService
         return $request->user();
     }
 
-    public function updateMe(UpdateUserRequest $request)
+    public function updateMe(User $user, array $data): User
     {
-        $user = Auth::user();
+        $user->update($data);
 
-        $user->update($request->validated());
-
-        return $request->user();
+        return $user->refresh();
     }
 
     public function deleteMe()

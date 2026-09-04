@@ -4,7 +4,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentWebhookController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:payment'])->group(function () {
     Route::post(
         '/orders/{order}/payment',
         [PaymentController::class, 'store']
@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post(
     '/payments/webhook',
     PaymentWebhookController::class
-);
+)->middleware('throttle:webhook');

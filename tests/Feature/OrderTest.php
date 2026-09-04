@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -340,5 +341,131 @@ class OrderTest extends TestCase
             'user_id' => $user->id,
             'status' => 'pending',
         ]);
+    }
+
+    public function test_orders_are_returned_from_newest_to_oldest(): void
+    {
+        $user = User::factory()->create();
+
+        $older = Order::factory()->create([
+            'user_id' => $user->id,
+            'created_at' => now()->subDays(2),
+        ]);
+
+        $newer = Order::factory()->create([
+            'user_id' => $user->id,
+            'created_at' => now(),
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson('/api/v1/orders');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath('data.data.0.id', $newer->id);
+        $response->assertJsonPath('data.data.1.id', $older->id);
+    }
+
+    public function test_orders_can_be_filtered_by_status(): void
+    {
+        $user = User::factory()->create();
+
+        Order::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'pending',
+        ]);
+
+        Order::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'confirmed',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson('/api/v1/orders?status=pending');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonCount(1, 'data.data');
+        $response->assertJsonPath('data.data.0.status', 'pending');
+    }
+
+    public function test_invalid_order_status_filter_returns_422(): void
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson(
+            '/api/v1/orders?status=invalid'
+        );
+
+        $response->assertStatus(422);
+    }
+
+    public function test_order_details_include_items(): void
+    {
+        $user = User::factory()->create();
+
+        $order = Order::factory()
+            ->has(OrderItem::factory()->count(2), 'items')
+            ->create([
+                'user_id' => $user->id,
+            ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson(
+            "/api/v1/orders/{$order->id}"
+        );
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(2, 'data.items');
+    }
+
+    public function test_order_details_return_stored_item_snapshot(): void
+    {
+        $user = User::factory()->create();
+
+        $order = Order::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $item = OrderItem::factory()->create([
+            'order_id' => $order->id,
+            'product_name' => 'Old Product Name',
+            'unit_price' => '49.90',
+            'quantity' => 2,
+            'subtotal' => '99.80',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson(
+            "/api/v1/orders/{$order->id}"
+        );
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.items.0.product_name',
+            'Old Product Name'
+        );
+
+        $response->assertJsonPath(
+            'data.items.0.unit_price',
+            '49.90'
+        );
+
+        $response->assertJsonPath(
+            'data.items.0.quantity',
+            2
+        );
+
+        $response->assertJsonPath(
+            'data.items.0.subtotal',
+            '99.80'
+        );
     }
 }
